@@ -1,0 +1,49 @@
+globals []
+patches-own [
+]
+turtles-own [
+  strategy
+  n-of0
+  tp
+  mates
+]
+
+to set-up
+ clear-all
+ ask patches [sprout 1]
+ ask turtles [
+  set mates other turtles in-radius rad-dim ;set mates n-of (4) other turtles in-radius 1 (less correct but it works)
+  set strategy 0
+  set tp 1.1 ;set tp 5
+  ]
+  ;ask n-of ((0.4) * count turtles) turtles [set strategy 1]
+  ask n-of random (count turtles + 1) turtles [set strategy 1]
+  ask n-of (0 * count turtles) turtles [set tp 0]
+  ask n-of ((0) * count turtles) turtles with [tp = 1.1] [set tp 0.25] ;ask n-of (0.5 * count turtles) turtles with [tp = 5] [set tp 1]
+  ask n-of ((0.5) * count turtles) turtles with [tp = 1.1] [set tp 0.5] ;ask n-of (0 * count turtles) turtles with [tp = 5] [set tp 2]
+  ask n-of ((0.5) * count turtles) turtles with [tp = 1.1] [set tp 0.75] ;ask n-of (0 * count turtles) turtles with [tp = 5] [set tp 3]
+  ask n-of ((0) * count turtles) turtles with [tp = 1.1] [set tp 1] ;ask n-of (0.5 * count turtles) turtles with [tp = 5] [set tp 4]
+ reset-ticks
+end
+
+to go
+  ask turtles[
+    count-strat
+    if (random-float 1 < revision_prob) [ifelse random-float 1 > prob_mist [play] [set strategy random 2]]
+  ]
+  tick
+end
+
+to count-strat
+  set n-of0 (count mates with [strategy = 0] / count mates)
+end
+
+to play
+  ifelse
+  n-of0 >= tp [set strategy 0 set color red] [set strategy 1 set color green]
+  ;(ifelse
+  ;n-of0 > tp [set strategy 0 set color red]
+  ;n-of0 < tp [set strategy 1 set color green]    ;alternative
+  ;[set strategy random 2]
+  ;)
+end
